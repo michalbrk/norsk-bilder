@@ -163,7 +163,7 @@ export default {
     },
     matching(inputValue, dataValue, errorValue){
       //check if searched term matches any value from Attractions file
-      return dataValue.includes(inputValue) ? inputValue : errorValue
+      return dataValue.includes(inputValue.toLowerCase()) ? inputValue : errorValue
     }
   }
 }
