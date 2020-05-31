@@ -18,16 +18,32 @@
       </v-row>
       <v-row dense>
         <v-col v-for="image in images" :key="image.id">
-          <v-card>
-            <v-img 
-              :src="image.previewURL" 
-              :height="itemHeight" 
-              @click="showLargeImage(image.largeImageURL)" 
-              class="white--text align-end">
-            </v-img>
+          <v-card
+            @mouseenter="image.areTagsDisplayed = true"
+            @mouseleave="image.areTagsDisplayed = false">
+              <v-img
+                :src="image.previewURL" 
+                :height="itemHeight" 
+                @click="showLargeImage(image.largeImageURL)" 
+                class="white--text align-end">
+                <v-row class="ml-1" v-if="$vuetify.breakpoint.smAndUp">
+                  <v-chip
+                    v-show="image.areTagsDisplayed" 
+                    x-small
+                    dark
+                    class="mb-1 ml-1"
+                    v-for="item in image.imageTags.split(', ')" :key="item.id">
+                    #{{ item }}
+                  </v-chip>
+                </v-row>
+              </v-img>
             <v-card-actions>
-              <v-spacer></v-spacer>
-                <v-rating dense small></v-rating>
+              <v-container>
+                <v-row>
+                  <v-spacer></v-spacer>
+                  <v-rating dense small></v-rating>
+                </v-row>
+              </v-container>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -39,7 +55,7 @@
         :src="largeImageSource">
         <v-icon 
           dark
-          class="mt-3 ml-2"
+          class="mt-3 ml-2 red--text"
           @click="backToGallery">mdi-arrow-left</v-icon>
       </v-img>
     </v-card>
@@ -65,7 +81,7 @@ export default {
     //component and display it
     EventBus.$on('value-to-display', itemsFromSearch => {
       this.isGalleryVisible = true
-        this.galleryLayoutHandler(itemsFromSearch)
+      this.galleryLayoutHandler(itemsFromSearch)
     })
   },
   beforeUpdate(){
@@ -103,7 +119,9 @@ export default {
         heightsArray.push(image.previewHeight)
         this.images.push({
           previewURL: image.previewURL, 
-          largeImageURL: image.largeImageURL
+          largeImageURL: image.largeImageURL,
+          imageTags: image.tags,
+          areTagsDisplayed: false
         })
       })
       if(heightsArray.length > 1){
