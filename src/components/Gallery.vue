@@ -49,16 +49,43 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-card v-if="isLargeImageVisible">
-      <v-img 
-        max-height="81vh"
-        :src="largeImageSource">
-        <v-icon 
-          dark
-          class="mt-3 ml-2 red--text"
-          @click="backToGallery">mdi-arrow-left</v-icon>
-      </v-img>
-    </v-card>
+    <v-container>
+      <v-row dense>
+        <v-col cols="12">
+          <v-card v-if="isLargeImageFailing" dark min-height="50vh">
+            <v-row dense>
+              <v-col cols="2">
+                <v-icon 
+                  dark
+                  class="mt-2 ml-3 mb-6 red--text"
+                  @click="backToGallery">mdi-arrow-left</v-icon>
+              </v-col>
+              <v-col cols="10"></v-col>
+            </v-row>
+            <v-row dense>
+              <v-col cols="4"></v-col>
+              <v-col cols="4">
+                <v-row justify="center">
+                  <v-progress-circular class="mt-6" indeterminate :size="100"></v-progress-circular>
+                </v-row>
+              </v-col>
+              <v-col cols="4"></v-col>
+            </v-row>
+          </v-card>
+          <v-card v-if="isLargeImageVisible">
+            <v-img 
+              max-height="81vh"
+              :src="largeImageSource"
+              v-on:error="onImageError">
+              <v-icon 
+                dark
+                class="mt-3 ml-2 red--text"
+                @click="backToGallery">mdi-arrow-left</v-icon>
+            </v-img>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -71,6 +98,7 @@ export default {
       isGalleryVisible: false,
       isSearchBarVisible: true,
       isLargeImageVisible: false,
+      isLargeImageFailing: false,
       images: [],
       largeImageSource: '',
       itemHeight: 0,
@@ -89,6 +117,7 @@ export default {
     EventBus.$on('back-to-homepage', () => {
       this.isGalleryVisible = false
       this.isLargeImageVisible = false
+      this.isLargeImageFailing = false
       this.images = []
     })
   },
@@ -106,7 +135,15 @@ export default {
     backToGallery(){
       EventBus.$emit('large-image-closed')
       this.isLargeImageVisible = false
+      this.isLargeImageFailing = false
       this.isGalleryVisible = true
+    },
+    //Spinner display when API error occurs
+    onImageError(){
+      EventBus.$emit('large-image-open')
+      this.isGalleryVisible = false
+      this.isLargeImageVisible = false
+      this.isLargeImageFailing = true
     },
     //Fixing the unequal height of displayed
     //components, by setting the height according to
