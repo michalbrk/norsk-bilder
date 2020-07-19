@@ -90,6 +90,7 @@ export default {
   },
   mounted(){
     this.dialog = true
+    console.log(this.$vuetify.breakpoint.smAndDown)
   },
   beforeUpdate(){
     //receiving event from the gallery component,
