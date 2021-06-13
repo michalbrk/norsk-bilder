@@ -13,6 +13,8 @@
     "highlight.js": "^10.4.1",
     "is-svg": "^4.2.2",
     "lodash": "^4.17.19",
+    "normalize-url": "^4.5.1",
+    "postcss": "^8.2.10",
     "vue": "^2.6.11",
     "vue-axios": "^2.1.5",
     "vue-lodash": "^2.1.2",
